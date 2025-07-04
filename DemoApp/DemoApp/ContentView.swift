@@ -54,7 +54,7 @@ struct ContentView: View {
                 SelectionRowsView(
                     viewModel: fruitsViewModelSelection,
                     elements: $fruits)
-                ) { item, _ in
+                { item, _ in
                     Text(item.description)
                         .foregroundStyle(.black)
                 }
