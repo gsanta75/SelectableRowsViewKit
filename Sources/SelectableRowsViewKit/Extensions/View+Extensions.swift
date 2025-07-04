@@ -102,16 +102,56 @@ extension View {
 }
 
 extension View {
+    /// Sets a uniform color for all selection indicators within `SelectionRowsView`.
+    ///
+    /// This modifier allows you to specify a single color that will be applied to all
+    /// selection indicators (checkmark, checkbox, toggle tint) in a `SelectionRowsView`.
+    /// This provides a quick way to theme all indicators with the same color.
+    ///
+    /// - Parameter color: The color to apply to all selection indicators, or `nil` to use default colors.
+    /// - Returns: A view that applies the specified color to all selection indicators in the environment.
+    ///
+    /// ## Usage
+    ///
+    /// ```swift
+    /// SelectionRowsView(viewModel: viewModel, elements: $items)
+    ///     .selectorColor(.green)
+    /// ```
+    ///
+    /// ## Notes
+    ///
+    /// - This modifier sets a uniform color for all items. For per-item color customization, use `colorItemSelectionProvider(_:)` instead.
+    /// - When both `selectorColor` and `colorItemSelectionProvider` are used, the item-specific provider takes precedence.
+    /// - For toggle style indicators, this color is applied as the tint color.
+    /// - For checkmark and checkbox styles, this color is applied as the foreground color.
     public func selectorColor(_ color: Color?) -> some View {
         self.environment(\.selectorColor, color)
     }
 }
 
+/// Environment key for storing the uniform selector color.
+///
+/// This key is used internally to pass the selector color through the SwiftUI environment
+/// to `SelectionRowsView` components. The default value is `nil`, which allows
+/// selection indicators to use their default system colors.
 private struct SelectorColorKey: EnvironmentKey {
+    /// The default value when no selector color is specified in the environment.
     static let defaultValue: Color? = nil
 }
 
+/// Extension to add selector color support to the SwiftUI environment.
+///
+/// This extension provides access to the uniform selector color through the
+/// environment values system, enabling `SelectionRowsView` components to
+/// retrieve and apply the specified color to their selection indicators.
 extension EnvironmentValues {
+    /// The uniform color to apply to all selection indicators.
+    ///
+    /// When set to a specific color, all selection indicators within the environment
+    /// will use this color. When `nil`, indicators use their default system colors.
+    ///
+    /// This property is automatically managed by the `selectorColor(_:)` view modifier
+    /// and should not be accessed directly in most cases.
     var selectorColor: Color? {
         get { self[SelectorColorKey.self] }
         set { self[SelectorColorKey.self] = newValue }
