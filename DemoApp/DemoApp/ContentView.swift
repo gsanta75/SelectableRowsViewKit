@@ -12,7 +12,7 @@ struct ContentView: View {
     
     // MARK: - View Models
     @StateObject private var personViewModelSelection = SelectionViewModel<Person>()
-    @StateObject private var fruitsViewModelSelection = SelectionViewModel<Fruits>(mode: .single)
+    @StateObject private var fruitsViewModelSelection = SelectionViewModel<Fruits>(mode: .single, requireSelection: true)
     @StateObject private var numbersViewModelSelection = SelectionViewModel<Int>()
     @StateObject private var happinessViewModelSelection = SelectionViewModel<HappinessLevel>(mode: .single)
     
@@ -106,6 +106,12 @@ struct ContentView: View {
                     numbersViewModelSelection.deselectAll()
                     happinessViewModelSelection.deselectAll()
                 }
+            }
+        }
+        .onAppear {
+            // Ensure initial selection when required
+            if fruitsViewModelSelection.requiresSelection && !fruitsViewModelSelection.hasSelection && !fruits.isEmpty {
+                fruitsViewModelSelection.updateSelection(fruits[0])
             }
         }
     }
