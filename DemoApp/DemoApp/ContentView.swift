@@ -30,6 +30,7 @@ struct ContentView: View {
                     viewModel: personViewModelSelection,
                     elements: $persons
                 )
+                .selectorColor(.green)
             } header: {
                 Text("Persons (Default Style)")
             } footer: {
@@ -53,13 +54,10 @@ struct ContentView: View {
             Section {
                 SelectionRowsView(
                     viewModel: fruitsViewModelSelection,
-                    elements: $fruits)
-                { item, _ in
-                    Text(item.description)
-                        .foregroundStyle(.black)
-                }
+                    elements: $fruits
+                )
                 .selectorStyle(.checkbox)
-                .foregroundStyle(.orange)
+                .selectorColor(.orange)
             } header: {
                 Text("Fruits (Checkbox Style)")
             } footer: {
@@ -120,7 +118,7 @@ struct ContentView: View {
     private func happinessRow(for item: HappinessLevel, itemSelected: Bool) -> some View {
         HStack {
             Text(item.description)
-                .foregroundColor(itemSelected ? .pink : .black)
+                .foregroundStyle(itemSelected ? .pink : .black)
             Spacer()
             if itemSelected {
                 Text(item.statusIcon)

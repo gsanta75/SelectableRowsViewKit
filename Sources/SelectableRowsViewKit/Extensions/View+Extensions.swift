@@ -100,3 +100,20 @@ extension View {
         return self.environment(\.colorItemSelectionProvider, typeErasedSendableProvider)
     }
 }
+
+extension View {
+    public func selectorColor(_ color: Color?) -> some View {
+        self.environment(\.selectorColor, color)
+    }
+}
+
+private struct SelectorColorKey: EnvironmentKey {
+    static let defaultValue: Color? = nil
+}
+
+extension EnvironmentValues {
+    var selectorColor: Color? {
+        get { self[SelectorColorKey.self] }
+        set { self[SelectorColorKey.self] = newValue }
+    }
+}

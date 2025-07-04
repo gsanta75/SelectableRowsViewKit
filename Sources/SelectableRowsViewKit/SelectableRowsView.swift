@@ -52,6 +52,8 @@ public struct SelectionRowsView<Element: Hashable, RowContent: View>: View {
     /// The environment color provider for selection indicators.
     @Environment(\.colorItemSelectionProvider) private var colorItemProvider
     
+    @Environment(\.selectorColor) private var color
+
     /// The closure that provides the content for each row.
     let rowContentProvider: (Element, _ isSelected: Bool) -> RowContent
 
@@ -74,7 +76,7 @@ public struct SelectionRowsView<Element: Hashable, RowContent: View>: View {
     
     public var body: some View {
         ForEach(elements, id: \.self) { element in
-            let indicatorColor: Color? = getIndicatorColor(for: element)
+            let indicatorColor: Color? = color ?? getIndicatorColor(for: element)
             
             if let style = selectorStyle {
                 // Show explicit selection indicator
@@ -167,6 +169,9 @@ public struct DefaultRowContent<Element>: View {
     /// Whether the element is currently selected.
     public let isSelected: Bool
     
+    @Environment(\.selectorStyle) private var selectorStyle
+    @Environment(\.selectorColor) private var color
+
     /// Creates a default row content view.
     ///
     /// - Parameters:
@@ -178,10 +183,12 @@ public struct DefaultRowContent<Element>: View {
     }
     
     public var body: some View {
-        HStack {
+        if let _ = selectorStyle {
             Text("\(element)")
-                .foregroundColor(isSelected ? .blue : .primary)
-            Spacer()
+                .foregroundColor(.primary)
+        } else {
+            Text("\(element)")
+                .foregroundColor(isSelected ? color ?? .blue : .primary)
         }
     }
 }
