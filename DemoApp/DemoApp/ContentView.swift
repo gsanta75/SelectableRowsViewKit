@@ -122,7 +122,7 @@ struct ContentView: View {
     private func happinessRow(for item: HappinessLevel, itemSelected: Bool) -> some View {
         HStack {
             Text(item.description)
-                .foregroundStyle(itemSelected ? .pink : .black)
+                .foregroundStyle(itemSelected ? .pink : .primary)
             Spacer()
             if itemSelected {
                 Text(item.statusIcon)
