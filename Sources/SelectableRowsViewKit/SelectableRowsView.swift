@@ -46,8 +46,8 @@ public struct SelectionRowsView<Element: Hashable, RowContent: View>: View {
     /// The binding to the array of elements to display.
     @Binding public var elements: [Element]
     
-    /// The environment selector style.
-    @Environment(\.selectorStyle) private var selectorStyle
+    /// The environment selection style.
+    @Environment(\.selectionStyle) private var selectionStyle
     
     /// The environment color provider for selection indicators.
     @Environment(\.colorItemSelectionProvider) private var colorItemProvider
@@ -77,27 +77,39 @@ public struct SelectionRowsView<Element: Hashable, RowContent: View>: View {
     public var body: some View {
         ForEach(elements, id: \.self) { element in
             let indicatorColor: Color? = color ?? getIndicatorColor(for: element)
+            let isSelected = viewModel.isSelected(element)
+            let selectionAction = { viewModel.updateSelection(element) }
             
-            if let style = selectorStyle {
-                // Show explicit selection indicator
-                HStack {
-                    rowContentProvider(element, viewModel.isSelected(element))
-                
-                    Toggle("", isOn: Binding(
-                        get: { viewModel.isSelected(element) },
-                        set: { _ in viewModel.updateSelection(element) }
-                    ))
-                    .toggleStyle(SelectorToggleStyle(
-                        style: style,
-                        color: indicatorColor
-                    ))
+            Group {
+                switch selectionStyle {
+                case .checkmark:
+                    rowContentProvider(element, isSelected)
+                        .checkmarkSelection(
+                            isSelected: isSelected,
+                            color: indicatorColor,
+                            onSelectionChange: selectionAction
+                        )
+                case .checkbox:
+                    rowContentProvider(element, isSelected)
+                        .checkboxSelection(
+                            isSelected: isSelected,
+                            color: indicatorColor,
+                            onSelectionChange: selectionAction
+                        )
+                case .toggle:
+                    rowContentProvider(element, isSelected)
+                        .toggleSelection(
+                            isSelected: isSelected,
+                            color: indicatorColor,
+                            onSelectionChange: selectionAction
+                        )
+                case .tap, .none:
+                    rowContentProvider(element, isSelected)
+                        .tapSelection(
+                            isSelected: isSelected,
+                            onSelectionChange: selectionAction
+                        )
                 }
-            } else {
-                // Use tap gesture for selection
-                rowContentProvider(element, viewModel.isSelected(element))
-                    .onTapGesture {
-                        viewModel.updateSelection(element)
-                    }
             }
         }
         .onDelete(perform: deleteItems)
@@ -169,7 +181,7 @@ public struct DefaultRowContent<Element>: View {
     /// Whether the element is currently selected.
     public let isSelected: Bool
     
-    @Environment(\.selectorStyle) private var selectorStyle
+    @Environment(\.selectionStyle) private var selectionStyle
     @Environment(\.selectorColor) private var color
 
     /// Creates a default row content view.
@@ -183,7 +195,7 @@ public struct DefaultRowContent<Element>: View {
     }
     
     public var body: some View {
-        if let _ = selectorStyle {
+        if selectionStyle != nil && selectionStyle != .tap {
             Text("\(element)")
                 .foregroundColor(.primary)
         } else {

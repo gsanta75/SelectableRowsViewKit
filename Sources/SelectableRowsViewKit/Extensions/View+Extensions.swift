@@ -21,36 +21,60 @@ extension View {
     }
 }
 
-// MARK: - Selector Style Environment
+// MARK: - Selection Style Environment
+
+/// The visual style options for selection indicators.
+public enum SelectionStyle: String, CaseIterable, Identifiable, Sendable {
+    /// A checkmark icon that appears when selected.
+    case checkmark
+    /// A checkbox that shows filled when selected, empty when not.
+    case checkbox
+    /// A standard toggle switch.
+    case toggle
+    /// Tap gesture selection without visual indicator.
+    case tap
+    
+    public var id: Self { self }
+    
+    /// The human-readable title for the style.
+    public var title: String {
+        switch self {
+        case .checkmark: return "Checkmark"
+        case .checkbox: return "Checkbox"
+        case .toggle: return "Toggle"
+        case .tap: return "Tap"
+        }
+    }
+}
 
 extension View {
-    /// Sets the selector style for selection indicators within `SelectionRowsView`.
+    /// Sets the selection style for selection indicators within `SelectionRowsView`.
     ///
     /// This modifier allows you to specify the visual style used for selection indicators
-    /// (checkmark, checkbox, or toggle) in a `SelectionRowsView`.
+    /// (checkmark, checkbox, toggle, or tap) in a `SelectionRowsView`.
     ///
-    /// - Parameter style: The selector style to use, or `nil` to use default tap behavior.
-    /// - Returns: A view that applies the specified selector style to the environment.
+    /// - Parameter style: The selection style to use, or `nil` to use default tap behavior.
+    /// - Returns: A view that applies the specified selection style to the environment.
     ///
     /// ## Usage
     ///
     /// ```swift
     /// SelectionRowsView(viewModel: viewModel, elements: $items)
-    ///     .selectorStyle(.checkbox)
+    ///     .selectionStyle(.checkbox)
     /// ```
-    public func selectorStyle(_ style: SelectorToggleStyle.SelectorStyle?) -> some View {
-        self.environment(\.selectorStyle, style)
+    public func selectionStyle(_ style: SelectionStyle?) -> some View {
+        self.environment(\.selectionStyle, style)
     }
 }
 
-private struct SelectorStyleKey: @preconcurrency EnvironmentKey {
-    @MainActor static let defaultValue: SelectorToggleStyle.SelectorStyle? = nil
+private struct SelectionStyleKey: @preconcurrency EnvironmentKey {
+    @MainActor static let defaultValue: SelectionStyle? = nil
 }
 
 extension EnvironmentValues {
-    var selectorStyle: SelectorToggleStyle.SelectorStyle? {
-        get { self[SelectorStyleKey.self] }
-        set { self[SelectorStyleKey.self] = newValue }
+    var selectionStyle: SelectionStyle? {
+        get { self[SelectionStyleKey.self] }
+        set { self[SelectionStyleKey.self] = newValue }
     }
 }
 
