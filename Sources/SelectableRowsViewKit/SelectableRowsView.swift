@@ -104,7 +104,14 @@ public struct SelectionRowsView<Element: Hashable, RowContent: View>: View {
                     )
             case .tapOnElement, .none:
                 rowContentProvider(element, isSelected)
-                    .tapSelection(
+                    .tapElementSelection(
+                        isSelected: isSelected,
+                        color: indicatorColor,
+                        onSelectionChange: selectionAction
+                    )
+            case .tapOnRow:
+                rowContentProvider(element, isSelected)
+                    .tapRowSelection(
                         isSelected: isSelected,
                         color: indicatorColor,
                         onSelectionChange: selectionAction
@@ -194,7 +201,7 @@ public struct DefaultRowContent<Element>: View {
     }
     
     public var body: some View {
-        if selectionIndicator != nil && selectionIndicator != .tapOnElement {
+        if selectionIndicator != nil && selectionIndicator != .tapOnElement && selectionIndicator != .tapOnRow {
             Text("\(element)")
                 .foregroundColor(.primary)
         } else {

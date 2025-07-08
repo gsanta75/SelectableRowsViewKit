@@ -31,8 +31,10 @@ public enum SelectionIndicator: String, CaseIterable, Identifiable, Sendable {
     case checkbox
     /// A standard toggle switch.
     case toggle
-    /// Tap gesture selection without visual indicator.
+    /// Tap gesture selection without visual indicator on the element content.
     case tapOnElement
+    /// Tap gesture selection without visual indicator on the entire row.
+    case tapOnRow
     
     public var id: Self { self }
     
@@ -42,7 +44,8 @@ public enum SelectionIndicator: String, CaseIterable, Identifiable, Sendable {
         case .checkmark: return "Checkmark"
         case .checkbox: return "Checkbox"
         case .toggle: return "Toggle"
-        case .tapOnElement: return "tapOnElement"
+        case .tapOnElement: return "Tap on Element"
+        case .tapOnRow: return "Tap on Row"
         }
     }
 }

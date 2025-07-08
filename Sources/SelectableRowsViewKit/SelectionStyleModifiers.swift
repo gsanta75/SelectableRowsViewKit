@@ -140,7 +140,7 @@ public struct ToggleSelection: ViewModifier {
 
 // MARK: - TapElementSelection
 
-/// A view modifier that adds tap gesture selection without visual indicator.
+/// A view modifier that adds tap gesture selection without visual indicator on the element content.
 public struct TapElementSelection: ViewModifier {
     /// Whether the item is currently selected.
     public let isSelected: Bool
@@ -151,10 +151,11 @@ public struct TapElementSelection: ViewModifier {
     /// The action to perform when the selection state changes.
     public let onSelectionChange: () -> Void
     
-    /// Creates a tap style selection modifier.
+    /// Creates a tap element selection modifier.
     ///
     /// - Parameters:
     ///   - isSelected: Whether the item is currently selected.
+    ///   - color: The color to use for the element when selected. Pass `nil` to use the default color.
     ///   - onSelectionChange: The action to perform when the selection state changes.
     public init(isSelected: Bool,
                 color: Color? = nil,
@@ -171,6 +172,47 @@ public struct TapElementSelection: ViewModifier {
             .onTapGesture {
                 onSelectionChange()
             }
+    }
+}
+
+// MARK: - TapRowSelection
+
+/// A view modifier that adds tap gesture selection without visual indicator on the entire row.
+public struct TapRowSelection: ViewModifier {
+    /// Whether the item is currently selected.
+    public let isSelected: Bool
+    
+    /// The color to use for the element selected.
+    public let color: Color?
+    
+    /// The action to perform when the selection state changes.
+    public let onSelectionChange: () -> Void
+    
+    /// Creates a tap row selection modifier.
+    ///
+    /// - Parameters:
+    ///   - isSelected: Whether the item is currently selected.
+    ///   - color: The color to use for the element when selected. Pass `nil` to use the default color.
+    ///   - onSelectionChange: The action to perform when the selection state changes.
+    public init(isSelected: Bool,
+                color: Color? = nil,
+                onSelectionChange: @escaping () -> Void
+    ) {
+        self.isSelected = isSelected
+        self.color = color
+        self.onSelectionChange = onSelectionChange
+    }
+    
+    public func body(content: Content) -> some View {
+        HStack {
+            content
+                .foregroundColor(isSelected ? color ?? .blue : .primary)
+            Spacer()
+        }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            onSelectionChange()
+        }
     }
 }
 
@@ -234,18 +276,38 @@ extension View {
         ))
     }
     
-    /// Adds tap gesture selection without visual indicator.
+    /// Adds tap gesture selection without visual indicator on the element content.
     ///
     /// - Parameters:
     ///   - isSelected: Whether the item is currently selected.
+    ///   - color: The color to use for the element when selected. Pass `nil` to use the default color.
     ///   - onSelectionChange: The action to perform when the selection state changes.
-    /// - Returns: A view with tap gesture selection.
-    public func tapSelection(
+    /// - Returns: A view with tap gesture selection on the element content.
+    public func tapElementSelection(
         isSelected: Bool,
         color: Color? = nil,
         onSelectionChange: @escaping () -> Void
     ) -> some View {
         self.modifier(TapElementSelection(
+            isSelected: isSelected,
+            color: color,
+            onSelectionChange: onSelectionChange
+        ))
+    }
+    
+    /// Adds tap gesture selection without visual indicator on the entire row.
+    ///
+    /// - Parameters:
+    ///   - isSelected: Whether the item is currently selected.
+    ///   - color: The color to use for the element when selected. Pass `nil` to use the default color.
+    ///   - onSelectionChange: The action to perform when the selection state changes.
+    /// - Returns: A view with tap gesture selection on the entire row.
+    public func tapRowSelection(
+        isSelected: Bool,
+        color: Color? = nil,
+        onSelectionChange: @escaping () -> Void
+    ) -> some View {
+        self.modifier(TapRowSelection(
             isSelected: isSelected,
             color: color,
             onSelectionChange: onSelectionChange
