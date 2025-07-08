@@ -63,7 +63,7 @@ extension View {
     ///
     /// ```swift
     /// SelectionRowsView(viewModel: viewModel, elements: $items)
-    ///     .selectionStyle(.checkbox)
+    ///     .selectionWith(.checkbox)
     /// ```
     public func selectionWith(_ selector: SelectionIndicator?) -> some View {
         self.environment(\.selectionIndicator, selector)
