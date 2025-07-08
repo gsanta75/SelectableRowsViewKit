@@ -30,6 +30,7 @@ struct ContentView: View {
                     viewModel: personViewModelSelection,
                     elements: $persons
                 )
+                .selectionWith(.tapOnRow)
                 .selectorColor(.green)
             } header: {
                 Text("Persons (Default Style)")
@@ -42,7 +43,7 @@ struct ContentView: View {
                 SelectionRowsView(
                     viewModel: happinessViewModelSelection,
                     elements: $happiness,
-                    rowContent: happinessRow
+                    selectionRowContent: happinessRow
                 )
             } header: {
                 Text("Happiness (Custom Content)")

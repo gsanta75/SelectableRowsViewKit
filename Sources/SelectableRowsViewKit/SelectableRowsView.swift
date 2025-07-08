@@ -62,16 +62,16 @@ public struct SelectionRowsView<Element: Hashable, RowContent: View>: View {
     /// - Parameters:
     ///   - viewModel: The view model that manages selection state.
     ///   - elements: A binding to the array of elements to display.
-    ///   - rowContent: A closure that creates the content for each row.
+    ///   - selectionRowContent: A closure that creates the content for each row.
     ///     The closure receives the element and its selection state.
     public init(
         viewModel: SelectionViewModel<Element>,
         elements: Binding<[Element]>,
-        @ViewBuilder rowContent: @escaping (Element, _ isSelected: Bool) -> RowContent
+        @ViewBuilder selectionRowContent: @escaping (Element, _ isSelected: Bool) -> RowContent
     ) {
         self.viewModel = viewModel
         self._elements = elements
-        self.rowContentProvider = rowContent
+        self.rowContentProvider = selectionRowContent
     }
     
     public var body: some View {
