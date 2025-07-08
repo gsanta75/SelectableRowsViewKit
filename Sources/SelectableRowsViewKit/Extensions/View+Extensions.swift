@@ -24,7 +24,7 @@ extension View {
 // MARK: - Selection Style Environment
 
 /// The visual style options for selection indicators.
-public enum SelectionStyle: String, CaseIterable, Identifiable, Sendable {
+public enum SelectionIndicator: String, CaseIterable, Identifiable, Sendable {
     /// A checkmark icon that appears when selected.
     case checkmark
     /// A checkbox that shows filled when selected, empty when not.
@@ -32,7 +32,7 @@ public enum SelectionStyle: String, CaseIterable, Identifiable, Sendable {
     /// A standard toggle switch.
     case toggle
     /// Tap gesture selection without visual indicator.
-    case tap
+    case tapOnElement
     
     public var id: Self { self }
     
@@ -42,7 +42,7 @@ public enum SelectionStyle: String, CaseIterable, Identifiable, Sendable {
         case .checkmark: return "Checkmark"
         case .checkbox: return "Checkbox"
         case .toggle: return "Toggle"
-        case .tap: return "Tap"
+        case .tapOnElement: return "tapOnElement"
         }
     }
 }
@@ -62,19 +62,19 @@ extension View {
     /// SelectionRowsView(viewModel: viewModel, elements: $items)
     ///     .selectionStyle(.checkbox)
     /// ```
-    public func selectionStyle(_ style: SelectionStyle?) -> some View {
-        self.environment(\.selectionStyle, style)
+    public func selectionWith(_ selector: SelectionIndicator?) -> some View {
+        self.environment(\.selectionIndicator, selector)
     }
 }
 
-private struct SelectionStyleKey: @preconcurrency EnvironmentKey {
-    @MainActor static let defaultValue: SelectionStyle? = nil
+private struct SelectionIndicatorKey: @preconcurrency EnvironmentKey {
+    @MainActor static let defaultValue: SelectionIndicator? = nil
 }
 
 extension EnvironmentValues {
-    var selectionStyle: SelectionStyle? {
-        get { self[SelectionStyleKey.self] }
-        set { self[SelectionStyleKey.self] = newValue }
+    var selectionIndicator: SelectionIndicator? {
+        get { self[SelectionIndicatorKey.self] }
+        set { self[SelectionIndicatorKey.self] = newValue }
     }
 }
 

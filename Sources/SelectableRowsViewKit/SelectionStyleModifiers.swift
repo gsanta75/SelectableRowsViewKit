@@ -1,7 +1,9 @@
 import SwiftUI
 
+// MARK: - CheckboxSelection
+
 /// A view modifier that adds a checkbox selection indicator to a view.
-public struct CheckboxStyleSelection: ViewModifier {
+public struct CheckboxSelection: ViewModifier {
     /// Whether the item is currently selected.
     public let isSelected: Bool
     
@@ -42,8 +44,10 @@ public struct CheckboxStyleSelection: ViewModifier {
     }
 }
 
+// MARK: - CheckmarkSelection
+
 /// A view modifier that adds a checkmark selection indicator to a view.
-public struct CheckmarkStyleSelection: ViewModifier {
+public struct CheckmarkSelection: ViewModifier {
     /// Whether the item is currently selected.
     public let isSelected: Bool
     
@@ -91,8 +95,10 @@ public struct CheckmarkStyleSelection: ViewModifier {
     }
 }
 
+// MARK: - ToggleSelection
+
 /// A view modifier that adds a toggle selection indicator to a view.
-public struct ToggleStyleSelection: ViewModifier {
+public struct ToggleSelection: ViewModifier {
     /// Whether the item is currently selected.
     public let isSelected: Bool
     
@@ -132,8 +138,10 @@ public struct ToggleStyleSelection: ViewModifier {
     }
 }
 
+// MARK: - TapElementSelection
+
 /// A view modifier that adds tap gesture selection without visual indicator.
-public struct TapStyleSelection: ViewModifier {
+public struct TapElementSelection: ViewModifier {
     /// Whether the item is currently selected.
     public let isSelected: Bool
     
@@ -175,7 +183,7 @@ extension View {
         color: Color? = nil,
         onSelectionChange: @escaping () -> Void
     ) -> some View {
-        self.modifier(CheckboxStyleSelection(
+        self.modifier(CheckboxSelection(
             isSelected: isSelected,
             color: color,
             onSelectionChange: onSelectionChange
@@ -194,7 +202,7 @@ extension View {
         color: Color? = nil,
         onSelectionChange: @escaping () -> Void
     ) -> some View {
-        self.modifier(CheckmarkStyleSelection(
+        self.modifier(CheckmarkSelection(
             isSelected: isSelected,
             color: color,
             onSelectionChange: onSelectionChange
@@ -213,7 +221,7 @@ extension View {
         color: Color? = nil,
         onSelectionChange: @escaping () -> Void
     ) -> some View {
-        self.modifier(ToggleStyleSelection(
+        self.modifier(ToggleSelection(
             isSelected: isSelected,
             color: color,
             onSelectionChange: onSelectionChange
@@ -230,7 +238,7 @@ extension View {
         isSelected: Bool,
         onSelectionChange: @escaping () -> Void
     ) -> some View {
-        self.modifier(TapStyleSelection(
+        self.modifier(TapElementSelection(
             isSelected: isSelected,
             onSelectionChange: onSelectionChange
         ))

@@ -47,7 +47,7 @@ public struct SelectionRowsView<Element: Hashable, RowContent: View>: View {
     @Binding public var elements: [Element]
     
     /// The environment selection style.
-    @Environment(\.selectionStyle) private var selectionStyle
+    @Environment(\.selectionIndicator) private var selectionIndicator
     
     /// The environment color provider for selection indicators.
     @Environment(\.colorItemSelectionProvider) private var colorItemProvider
@@ -80,37 +80,36 @@ public struct SelectionRowsView<Element: Hashable, RowContent: View>: View {
             let isSelected = viewModel.isSelected(element)
             let selectionAction = { viewModel.updateSelection(element) }
             
-            Group {
-                switch selectionStyle {
-                case .checkmark:
-                    rowContentProvider(element, isSelected)
-                        .checkmarkSelection(
-                            isSelected: isSelected,
-                            color: indicatorColor,
-                            onSelectionChange: selectionAction
-                        )
-                case .checkbox:
-                    rowContentProvider(element, isSelected)
-                        .checkboxSelection(
-                            isSelected: isSelected,
-                            color: indicatorColor,
-                            onSelectionChange: selectionAction
-                        )
-                case .toggle:
-                    rowContentProvider(element, isSelected)
-                        .toggleSelection(
-                            isSelected: isSelected,
-                            color: indicatorColor,
-                            onSelectionChange: selectionAction
-                        )
-                case .tap, .none:
-                    rowContentProvider(element, isSelected)
-                        .tapSelection(
-                            isSelected: isSelected,
-                            onSelectionChange: selectionAction
-                        )
-                }
+            switch selectionIndicator {
+            case .checkmark:
+                rowContentProvider(element, isSelected)
+                    .checkmarkSelection(
+                        isSelected: isSelected,
+                        color: indicatorColor,
+                        onSelectionChange: selectionAction
+                    )
+            case .checkbox:
+                rowContentProvider(element, isSelected)
+                    .checkboxSelection(
+                        isSelected: isSelected,
+                        color: indicatorColor,
+                        onSelectionChange: selectionAction
+                    )
+            case .toggle:
+                rowContentProvider(element, isSelected)
+                    .toggleSelection(
+                        isSelected: isSelected,
+                        color: indicatorColor,
+                        onSelectionChange: selectionAction
+                    )
+            case .tapOnElement, .none:
+                rowContentProvider(element, isSelected)
+                    .tapSelection(
+                        isSelected: isSelected,
+                        onSelectionChange: selectionAction
+                    )
             }
+
         }
         .onDelete(perform: deleteItems)
         .onMove(perform: moveItems)
@@ -181,7 +180,7 @@ public struct DefaultRowContent<Element>: View {
     /// Whether the element is currently selected.
     public let isSelected: Bool
     
-    @Environment(\.selectionStyle) private var selectionStyle
+    @Environment(\.selectionIndicator) private var selectionIndicator
     @Environment(\.selectorColor) private var color
 
     /// Creates a default row content view.
@@ -195,7 +194,7 @@ public struct DefaultRowContent<Element>: View {
     }
     
     public var body: some View {
-        if selectionStyle != nil && selectionStyle != .tap {
+        if selectionIndicator != nil && selectionIndicator != .tapOnElement {
             Text("\(element)")
                 .foregroundColor(.primary)
         } else {
