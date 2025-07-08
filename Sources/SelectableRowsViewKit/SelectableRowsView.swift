@@ -33,7 +33,7 @@ import SwiftUI
 ///
 /// ```swift
 /// SelectionRowsView(viewModel: viewModel, elements: $items)
-///     .selectorStyle(.checkbox)
+///     .selectionWith(.checkbox)
 ///     .colorItemSelectionProvider { item in
 ///         item.hasPrefix("Important") ? .red : .blue
 ///     }
