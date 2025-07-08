@@ -106,6 +106,7 @@ public struct SelectionRowsView<Element: Hashable, RowContent: View>: View {
                 rowContentProvider(element, isSelected)
                     .tapSelection(
                         isSelected: isSelected,
+                        color: indicatorColor,
                         onSelectionChange: selectionAction
                     )
             }
@@ -181,7 +182,6 @@ public struct DefaultRowContent<Element>: View {
     public let isSelected: Bool
     
     @Environment(\.selectionIndicator) private var selectionIndicator
-    @Environment(\.selectorColor) private var color
 
     /// Creates a default row content view.
     ///
@@ -199,7 +199,6 @@ public struct DefaultRowContent<Element>: View {
                 .foregroundColor(.primary)
         } else {
             Text("\(element)")
-                .foregroundColor(isSelected ? color ?? .blue : .primary)
         }
     }
 }

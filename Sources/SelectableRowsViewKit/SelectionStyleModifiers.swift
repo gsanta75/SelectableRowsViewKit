@@ -145,6 +145,9 @@ public struct TapElementSelection: ViewModifier {
     /// Whether the item is currently selected.
     public let isSelected: Bool
     
+    /// The color to use for the element selected.
+    public let color: Color?
+    
     /// The action to perform when the selection state changes.
     public let onSelectionChange: () -> Void
     
@@ -154,14 +157,17 @@ public struct TapElementSelection: ViewModifier {
     ///   - isSelected: Whether the item is currently selected.
     ///   - onSelectionChange: The action to perform when the selection state changes.
     public init(isSelected: Bool,
+                color: Color? = nil,
                 onSelectionChange: @escaping () -> Void
     ) {
         self.isSelected = isSelected
+        self.color = color
         self.onSelectionChange = onSelectionChange
     }
     
     public func body(content: Content) -> some View {
         content
+            .foregroundColor(isSelected ? color ?? .blue : .primary)
             .onTapGesture {
                 onSelectionChange()
             }
@@ -236,10 +242,12 @@ extension View {
     /// - Returns: A view with tap gesture selection.
     public func tapSelection(
         isSelected: Bool,
+        color: Color? = nil,
         onSelectionChange: @escaping () -> Void
     ) -> some View {
         self.modifier(TapElementSelection(
             isSelected: isSelected,
+            color: color,
             onSelectionChange: onSelectionChange
         ))
     }
