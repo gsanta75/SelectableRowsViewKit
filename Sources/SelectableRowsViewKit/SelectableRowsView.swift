@@ -100,6 +100,7 @@ public struct SelectionRowsView<Element: Hashable, RowContent: View>: View {
                     .toggleSelection(
                         isSelected: isSelected,
                         color: indicatorColor,
+                        alignment: .leading,
                         onSelectionChange: selectionAction
                     )
             case .tapOnElement, .none:

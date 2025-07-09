@@ -184,3 +184,10 @@ extension EnvironmentValues {
         set { self[SelectorColorKey.self] = newValue }
     }
 }
+
+extension SelectionIndicator {
+    public enum Alignment {
+        case leading
+        case trailing
+    }
+}

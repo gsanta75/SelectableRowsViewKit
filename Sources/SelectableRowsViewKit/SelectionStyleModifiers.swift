@@ -1,5 +1,42 @@
 import SwiftUI
 
+// MARK: - Selection Icon ViewModifier
+public struct SelectionIconView<IconSelection: View>: ViewModifier {
+    public let icon: IconSelection
+    public let alignment: SelectionIndicator.Alignment
+    
+    public init(icon: IconSelection,
+                alignment: SelectionIndicator.Alignment
+    ) {
+        self.icon = icon
+        self.alignment = alignment
+    }
+    
+    public func body(content: Content) -> some View {
+        HStack {
+            switch alignment {
+            case .leading:
+                icon.padding(.trailing, 8)
+                content
+                Spacer()
+            case .trailing:
+                content
+                Spacer()
+                icon
+            }
+        }
+    }
+}
+
+extension View {
+    public func withSelectionIconView<IconSelection: View>(
+        _ icon: IconSelection,
+        alignment: SelectionIndicator.Alignment = .trailing
+    ) -> some View {
+        modifier(SelectionIconView(icon: icon, alignment: alignment))
+    }
+}
+
 // MARK: - CheckboxSelection
 
 /// A view modifier that adds a checkbox selection indicator to a view.
@@ -10,6 +47,9 @@ public struct CheckboxSelection: ViewModifier {
     /// The color to use for the selection indicator.
     public let color: Color?
     
+    /// The placement of the selection indicator on a row
+    public let alignment: SelectionIndicator.Alignment
+
     /// The action to perform when the selection state changes.
     public let onSelectionChange: () -> Void
     
@@ -18,29 +58,32 @@ public struct CheckboxSelection: ViewModifier {
     /// - Parameters:
     ///   - isSelected: Whether the item is currently selected.
     ///   - color: The color to use for the selection indicator. Pass `nil` to use the default color.
+    ///   - alignment: The placement of the selection indicator on a row
     ///   - onSelectionChange: The action to perform when the selection state changes.
     public init(isSelected: Bool,
                 color: Color? = nil,
+                alignment: SelectionIndicator.Alignment = .trailing,
                 onSelectionChange: @escaping () -> Void
     ) {
         self.isSelected = isSelected
         self.color = color
+        self.alignment = alignment
         self.onSelectionChange = onSelectionChange
     }
     
     public func body(content: Content) -> some View {
-        HStack {
-            content
-            
-            Spacer()
-            
-            Image(systemName: isSelected ? "checkmark.square.fill" : "square")
-                .imageScale(.large)
-                .foregroundStyle(color ?? .accentColor)
-                .onTapGesture {
-                    onSelectionChange()
-                }
-        }
+        content
+            .withSelectionIconView(iconForSelection(isSelected), alignment: alignment)
+    }
+    
+    @ViewBuilder
+    private func iconForSelection(_ isSelected: Bool) -> some View {
+        Image(systemName: isSelected ? "checkmark.square.fill" : "square")
+            .imageScale(.large)
+            .foregroundStyle(color ?? .accentColor)
+            .onTapGesture {
+                onSelectionChange()
+            }
     }
 }
 
@@ -57,40 +100,41 @@ public struct CheckmarkSelection: ViewModifier {
     /// The action to perform when the selection state changes.
     public let onSelectionChange: () -> Void
     
+    /// The placement of the selection indicator on a row
+    public let alignment: SelectionIndicator.Alignment
+    
     /// Creates a checkmark style selection modifier.
     ///
     /// - Parameters:
     ///   - isSelected: Whether the item is currently selected.
     ///   - color: The color to use for the selection indicator. Pass `nil` to use the default color.
+    ///   - alignment: The placement of the selection indicator on a row
     ///   - onSelectionChange: The action to perform when the selection state changes.
     public init(isSelected: Bool,
                 color: Color? = nil,
+                alignment: SelectionIndicator.Alignment = .trailing,
                 onSelectionChange: @escaping () -> Void
     ) {
         self.isSelected = isSelected
         self.color = color
+        self.alignment = alignment
         self.onSelectionChange = onSelectionChange
     }
     
     public func body(content: Content) -> some View {
-        HStack {
-            content
-            
-            Spacer()
-            
-            Button {
-                onSelectionChange()
-            } label: {
-                if isSelected {
-                    Image(systemName: "checkmark")
-                        .foregroundStyle(color ?? .accentColor)
-                } else {
-                    Rectangle()
-                        .frame(width: 25, height: 25)
-                        .foregroundStyle(.background.opacity(0.001))
-                }
-            }
-            .buttonStyle(.plain)
+        content
+            .withSelectionIconView(iconForSelection(isSelected), alignment: alignment)
+    }
+    
+    @ViewBuilder
+    private func iconForSelection(_ isSelected: Bool) -> some View {
+        if isSelected {
+            Image(systemName: "checkmark")
+                .foregroundStyle(color ?? .accentColor)
+        } else {
+            Rectangle()
+                .frame(width: 25, height: 25)
+                .foregroundStyle(.background.opacity(0.001))
         }
     }
 }
@@ -105,6 +149,9 @@ public struct ToggleSelection: ViewModifier {
     /// The color to use for the selection indicator.
     public let color: Color?
     
+    /// The placement of the selection indicator on a row
+    public let alignment: SelectionIndicator.Alignment
+
     /// The action to perform when the selection state changes.
     public let onSelectionChange: () -> Void
     
@@ -113,28 +160,31 @@ public struct ToggleSelection: ViewModifier {
     /// - Parameters:
     ///   - isSelected: Whether the item is currently selected.
     ///   - color: The color to use for the selection indicator. Pass `nil` to use the default color.
+    ///   - alignment: The placement of the selection indicator on a row
     ///   - onSelectionChange: The action to perform when the selection state changes.
     public init(isSelected: Bool,
                 color: Color? = nil,
+                alignment: SelectionIndicator.Alignment = .trailing,
                 onSelectionChange: @escaping () -> Void
     ) {
         self.isSelected = isSelected
         self.color = color
+        self.alignment = alignment
         self.onSelectionChange = onSelectionChange
     }
     
     public func body(content: Content) -> some View {
-        HStack {
-            content
-            
-            Spacer()
-            
-            Toggle("", isOn: Binding(
-                get: { isSelected },
-                set: { _ in onSelectionChange() }
-            ))
-            .tint(color)
-        }
+        content
+            .withSelectionIconView(iconForSelection(isSelected), alignment: alignment)
+    }
+    
+    @ViewBuilder
+    private func iconForSelection(_ isSelected: Bool) -> some View {
+        Toggle("", isOn: Binding(
+            get: { isSelected },
+            set: { _ in onSelectionChange() }
+        ))
+        .tint(color)
     }
 }
 
@@ -229,11 +279,13 @@ extension View {
     public func checkboxSelection(
         isSelected: Bool,
         color: Color? = nil,
+        alignment: SelectionIndicator.Alignment = .trailing,
         onSelectionChange: @escaping () -> Void
     ) -> some View {
         self.modifier(CheckboxSelection(
             isSelected: isSelected,
             color: color,
+            alignment: alignment,
             onSelectionChange: onSelectionChange
         ))
     }
@@ -248,11 +300,13 @@ extension View {
     public func checkmarkSelection(
         isSelected: Bool,
         color: Color? = nil,
+        alignment: SelectionIndicator.Alignment = .trailing,
         onSelectionChange: @escaping () -> Void
     ) -> some View {
         self.modifier(CheckmarkSelection(
             isSelected: isSelected,
             color: color,
+            alignment: alignment,
             onSelectionChange: onSelectionChange
         ))
     }
@@ -267,11 +321,13 @@ extension View {
     public func toggleSelection(
         isSelected: Bool,
         color: Color? = nil,
+        alignment: SelectionIndicator.Alignment = .trailing,
         onSelectionChange: @escaping () -> Void
     ) -> some View {
         self.modifier(ToggleSelection(
             isSelected: isSelected,
             color: color,
+            alignment: alignment,
             onSelectionChange: onSelectionChange
         ))
     }
