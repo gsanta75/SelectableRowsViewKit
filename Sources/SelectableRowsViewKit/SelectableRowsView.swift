@@ -32,8 +32,16 @@ import SwiftUI
 /// ## Selection Styles
 ///
 /// ```swift
+/// // Basic usage with default alignment
 /// SelectionRowsView(viewModel: viewModel, elements: $items)
 ///     .selectionWith(.checkbox)
+///     .colorItemSelectionProvider { item in
+///         item.hasPrefix("Important") ? .red : .blue
+///     }
+/// 
+/// // With custom alignment
+/// SelectionRowsView(viewModel: viewModel, elements: $items)
+///     .selectionWith(.checkbox(alignment: .leading))
 ///     .colorItemSelectionProvider { item in
 ///         item.hasPrefix("Important") ? .red : .blue
 ///     }

@@ -7,6 +7,7 @@ A flexible and customizable SwiftUI component for creating selectable row lists 
 - ✅ **Single and Multiple Selection**: Support for both single and multiple selection modes
 - 🔒 **Required Selection**: Option to require at least one element to be selected in single mode
 - 🎨 **Customizable Selection Indicators**: Choose from checkmark, checkbox, toggle, or tap styles
+- 📍 **Flexible Alignment**: Position selection indicators on leading or trailing side
 - 🌈 **Custom Colors**: Per-item color customization for selection indicators
 - 🔧 **Flexible Content**: Use default content or provide custom row layouts
 - 📱 **iOS Native**: Built with SwiftUI best practices and native iOS design patterns
@@ -29,7 +30,7 @@ Add the following to your `Package.swift` file:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/gsanta75/SelectableRowsViewKit.git", from: "1.2.0")
+    .package(url: "https://github.com/gsanta75/SelectableRowsViewKit.git", from: "1.3.0")
 ]
 ```
 
@@ -45,7 +46,7 @@ This repository includes a comprehensive demo app that showcases all the feature
 
 - **Multiple selection with default styling** - Person list with tap-on-row selection
 - **Single selection with custom row content** - Happiness levels with emoji indicators
-- **Checkbox style selection** - Fruits list with yellow checkbox indicators
+- **Checkbox style selection** - Fruits list with yellow checkbox indicators on leading side
 - **Toggle style with custom colors** - Numbers list with conditional coloring (even/odd)
 - **Selection summary** - Real-time count of selected items
 - **Clear all functionality** - Reset all selections at once
@@ -144,6 +145,39 @@ SelectionRowsView(viewModel: viewModel, elements: $items)
 SelectionRowsView(viewModel: viewModel, elements: $items)
     .selectionWith(.toggle)
     .selectorColor(.red)
+```
+
+## Selection Indicator Alignment
+
+All visual selection indicators (checkmark, checkbox, toggle) support alignment positioning:
+
+### Leading Alignment
+Position indicators on the left side of the row:
+```swift
+SelectionRowsView(viewModel: viewModel, elements: $items)
+    .selectionWith(.checkbox(alignment: .leading))
+    .selectorColor(.yellow)
+```
+
+### Trailing Alignment (Default)
+Position indicators on the right side of the row:
+```swift
+SelectionRowsView(viewModel: viewModel, elements: $items)
+    .selectionWith(.toggle(alignment: .trailing))
+    .selectorColor(.red)
+```
+
+### Mixed Alignment Example
+```swift
+VStack {
+    // Leading checkboxes
+    SelectionRowsView(viewModel: viewModel1, elements: $items1)
+        .selectionWith(.checkbox(alignment: .leading))
+    
+    // Trailing toggles
+    SelectionRowsView(viewModel: viewModel2, elements: $items2)
+        .selectionWith(.toggle(alignment: .trailing))
+}
 ```
 
 ## Custom Row Content
@@ -247,11 +281,17 @@ viewModel.updateSelection(specificItem)
 
 ### `.selectionWith(_:)`
 Sets the visual style for selection indicators:
-- `.checkmark` - Shows/hides checkmark icon
-- `.checkbox` - Shows filled/empty checkbox
-- `.toggle` - Shows toggle switch
+- `.checkmark` - Shows/hides checkmark icon (supports alignment)
+- `.checkbox` - Shows filled/empty checkbox (supports alignment)
+- `.toggle` - Shows toggle switch (supports alignment)
 - `.tapOnElement` - Tap gesture on element content only (default)
 - `.tapOnRow` - Tap gesture on entire row area
+
+#### Alignment Support
+Visual indicators support alignment positioning:
+- `.checkmark(alignment: .leading)` - Checkmark on left side
+- `.checkbox(alignment: .trailing)` - Checkbox on right side (default)
+- `.toggle(alignment: .leading)` - Toggle on left side
 
 ### `.selectorColor(_:)`
 Sets a uniform color for all selection indicators.
@@ -348,6 +388,14 @@ This project is available under the MIT License. See the LICENSE file for more i
 Giuseppe Santaniello - [@gsanta75](https://github.com/gsanta75)
 
 ## Changelog
+
+### 1.3.0
+- **NEW**: Added alignment support for selection indicators
+- **NEW**: Support for `.leading` and `.trailing` alignment on checkmark, checkbox, and toggle indicators
+- **NEW**: Convenience static properties for cleaner API (`.checkbox` instead of `.checkbox()`)
+- **IMPROVED**: Enhanced toggle rendering with proper positioning and sizing
+- **IMPROVED**: Better layout handling for left-aligned indicators
+- Enhanced documentation with alignment examples
 
 ### 1.2.0
 - **BREAKING CHANGE**: Replaced `SelectorToggleStyle` with ViewModifier architecture

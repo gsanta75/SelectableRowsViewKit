@@ -77,6 +77,17 @@ public enum SelectionIndicator: Identifiable, Sendable, Equatable {
     public static var allCases: [SelectionIndicator] {
         return [.checkmark(), .checkbox(), .toggle(), .tapOnElement, .tapOnRow]
     }
+    
+    // MARK: - Convenience Static Properties
+    
+    /// Checkmark indicator with default trailing alignment.
+    public static let checkmark: SelectionIndicator = .checkmark()
+    
+    /// Checkbox indicator with default trailing alignment.
+    public static let checkbox: SelectionIndicator = .checkbox()
+    
+    /// Toggle indicator with default trailing alignment.
+    public static let toggle: SelectionIndicator = .toggle()
 }
 
 extension View {
@@ -91,8 +102,20 @@ extension View {
     /// ## Usage
     ///
     /// ```swift
+    /// // Basic usage with default alignment
     /// SelectionRowsView(viewModel: viewModel, elements: $items)
     ///     .selectionWith(.checkbox)
+    /// 
+    /// // With custom alignment
+    /// SelectionRowsView(viewModel: viewModel, elements: $items)
+    ///     .selectionWith(.checkbox(alignment: .leading))
+    /// 
+    /// // Multiple examples
+    /// SelectionRowsView(viewModel: viewModel, elements: $items)
+    ///     .selectionWith(.checkmark(alignment: .trailing))
+    /// 
+    /// SelectionRowsView(viewModel: viewModel, elements: $items)
+    ///     .selectionWith(.toggle(alignment: .leading))
     /// ```
     public func selectionWith(_ selector: SelectionIndicator?) -> some View {
         self.environment(\.selectionIndicator, selector)
@@ -139,6 +162,7 @@ extension View {
     ///
     /// ```swift
     /// SelectionRowsView(viewModel: viewModel, elements: $numbers)
+    ///     .selectionWith(.checkbox(alignment: .leading))
     ///     .colorItemSelectionProvider { number in
     ///         number % 2 == 0 ? .blue : .red
     ///     }
@@ -171,6 +195,7 @@ extension View {
     ///
     /// ```swift
     /// SelectionRowsView(viewModel: viewModel, elements: $items)
+    ///     .selectionWith(.checkmark(alignment: .leading))
     ///     .selectorColor(.green)
     /// ```
     ///
