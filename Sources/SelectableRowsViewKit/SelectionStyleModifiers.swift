@@ -271,104 +271,48 @@ public struct TapRowSelection: ViewModifier {
 // MARK: - View Extensions
 
 extension View {
-    /// Adds a checkbox selection indicator to the view.
-    ///
-    /// - Parameters:
-    ///   - isSelected: Whether the item is currently selected.
-    ///   - color: The color to use for the selection indicator. Pass `nil` to use the default color.
-    ///   - onSelectionChange: The action to perform when the selection state changes.
-    /// - Returns: A view with a checkbox selection indicator.
-    public func checkboxSelection(
-        isSelected: Bool,
-        color: Color? = nil,
-        alignment: SelectionIndicatorAlignment = .trailing,
-        onSelectionChange: @escaping () -> Void
-    ) -> some View {
-        self.modifier(CheckboxSelection(
-            isSelected: isSelected,
-            color: color,
-            alignment: alignment,
-            onSelectionChange: onSelectionChange
-        ))
-    }
     
-    /// Adds a checkmark selection indicator to the view.
-    ///
-    /// - Parameters:
-    ///   - isSelected: Whether the item is currently selected.
-    ///   - color: The color to use for the selection indicator. Pass `nil` to use the default color.
-    ///   - onSelectionChange: The action to perform when the selection state changes.
-    /// - Returns: A view with a checkmark selection indicator.
-    public func checkmarkSelection(
-        isSelected: Bool,
-        color: Color? = nil,
-        alignment: SelectionIndicatorAlignment = .trailing,
-        onSelectionChange: @escaping () -> Void
-    ) -> some View {
-        self.modifier(CheckmarkSelection(
-            isSelected: isSelected,
-            color: color,
-            alignment: alignment,
-            onSelectionChange: onSelectionChange
-        ))
-    }
-    
-    /// Adds a toggle selection indicator to the view.
-    ///
-    /// - Parameters:
-    ///   - isSelected: Whether the item is currently selected.
-    ///   - color: The color to use for the selection indicator. Pass `nil` to use the default color.
-    ///   - onSelectionChange: The action to perform when the selection state changes.
-    /// - Returns: A view with a toggle selection indicator.
-    public func toggleSelection(
-        isSelected: Bool,
-        color: Color? = nil,
-        alignment: SelectionIndicatorAlignment = .trailing,
-        onSelectionChange: @escaping () -> Void
-    ) -> some View {
-        self.modifier(ToggleSelection(
-            isSelected: isSelected,
-            color: color,
-            alignment: alignment,
-            onSelectionChange: onSelectionChange
-        ))
-    }
-    
-    /// Adds tap gesture selection without visual indicator on the element content.
-    ///
-    /// - Parameters:
-    ///   - isSelected: Whether the item is currently selected.
-    ///   - color: The color to use for the element when selected. Pass `nil` to use the default color.
-    ///   - onSelectionChange: The action to perform when the selection state changes.
-    /// - Returns: A view with tap gesture selection on the element content.
-    public func tapElementSelection(
+    @ViewBuilder
+    public func rowItemForSelection(
+        selectionIndicator: SelectionIndicator,
         isSelected: Bool,
         color: Color? = nil,
         onSelectionChange: @escaping () -> Void
     ) -> some View {
-        self.modifier(TapElementSelection(
-            isSelected: isSelected,
-            color: color,
-            onSelectionChange: onSelectionChange
-        ))
-    }
-    
-    /// Adds tap gesture selection without visual indicator on the entire row.
-    ///
-    /// - Parameters:
-    ///   - isSelected: Whether the item is currently selected.
-    ///   - color: The color to use for the element when selected. Pass `nil` to use the default color.
-    ///   - onSelectionChange: The action to perform when the selection state changes.
-    /// - Returns: A view with tap gesture selection on the entire row.
-    public func tapRowSelection(
-        isSelected: Bool,
-        color: Color? = nil,
-        onSelectionChange: @escaping () -> Void
-    ) -> some View {
-        self.modifier(TapRowSelection(
-            isSelected: isSelected,
-            color: color,
-            onSelectionChange: onSelectionChange
-        ))
+        switch selectionIndicator {
+        case .checkbox(let alignment):
+            self.modifier(CheckboxSelection(
+                isSelected: isSelected,
+                color: color,
+                alignment: alignment,
+                onSelectionChange: onSelectionChange
+            ))
+        case .checkmark(let alignment):
+            self.modifier(CheckmarkSelection(
+                isSelected: isSelected,
+                color: color,
+                alignment: alignment,
+                onSelectionChange: onSelectionChange
+            ))
+        case .toggle(let alignment):
+            self.modifier(ToggleSelection(
+                isSelected: isSelected,
+                color: color,
+                alignment: alignment,
+                onSelectionChange: onSelectionChange
+            ))
+        case .tapOnElement:
+            self.modifier(TapElementSelection(
+                isSelected: isSelected,
+                color: color,
+                onSelectionChange: onSelectionChange
+            ))
+        case .tapOnRow:
+            self.modifier(TapRowSelection(
+                isSelected: isSelected,
+                color: color,
+                onSelectionChange: onSelectionChange
+            ))
+        }
     }
 }

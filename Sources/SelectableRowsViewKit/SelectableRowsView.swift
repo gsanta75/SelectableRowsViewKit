@@ -88,46 +88,13 @@ public struct SelectionRowsView<Element: Hashable, RowContent: View>: View {
             let isSelected = viewModel.isSelected(element)
             let selectionAction = { viewModel.updateSelection(element) }
             
-            switch selectionIndicator {
-            case .checkmark(let alignment):
-                rowContentProvider(element, isSelected)
-                    .checkmarkSelection(
-                        isSelected: isSelected,
-                        color: indicatorColor,
-                        alignment: alignment,
-                        onSelectionChange: selectionAction
-                    )
-            case .checkbox(let alignment):
-                rowContentProvider(element, isSelected)
-                    .checkboxSelection(
-                        isSelected: isSelected,
-                        color: indicatorColor,
-                        alignment: alignment,
-                        onSelectionChange: selectionAction
-                    )
-            case .toggle(let alignment):
-                rowContentProvider(element, isSelected)
-                    .toggleSelection(
-                        isSelected: isSelected,
-                        color: indicatorColor,
-                        alignment: alignment,
-                        onSelectionChange: selectionAction
-                    )
-            case .tapOnElement, .none:
-                rowContentProvider(element, isSelected)
-                    .tapElementSelection(
-                        isSelected: isSelected,
-                        color: indicatorColor,
-                        onSelectionChange: selectionAction
-                    )
-            case .tapOnRow:
-                rowContentProvider(element, isSelected)
-                    .tapRowSelection(
-                        isSelected: isSelected,
-                        color: indicatorColor,
-                        onSelectionChange: selectionAction
-                    )
-            }
+            rowContentProvider(element, isSelected)
+                .rowItemForSelection(
+                    selectionIndicator: selectionIndicator ?? SelectionIndicator.tapOnElement,
+                    isSelected: isSelected,
+                    color: indicatorColor,
+                    onSelectionChange: selectionAction
+                )
 
         }
         .onDelete(perform: deleteItems)
