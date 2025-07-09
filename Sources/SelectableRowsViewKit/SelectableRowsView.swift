@@ -81,26 +81,28 @@ public struct SelectionRowsView<Element: Hashable, RowContent: View>: View {
             let selectionAction = { viewModel.updateSelection(element) }
             
             switch selectionIndicator {
-            case .checkmark:
+            case .checkmark(let alignment):
                 rowContentProvider(element, isSelected)
                     .checkmarkSelection(
                         isSelected: isSelected,
                         color: indicatorColor,
+                        alignment: alignment,
                         onSelectionChange: selectionAction
                     )
-            case .checkbox:
+            case .checkbox(let alignment):
                 rowContentProvider(element, isSelected)
                     .checkboxSelection(
                         isSelected: isSelected,
                         color: indicatorColor,
+                        alignment: alignment,
                         onSelectionChange: selectionAction
                     )
-            case .toggle:
+            case .toggle(let alignment):
                 rowContentProvider(element, isSelected)
                     .toggleSelection(
                         isSelected: isSelected,
                         color: indicatorColor,
-                        alignment: .leading,
+                        alignment: alignment,
                         onSelectionChange: selectionAction
                     )
             case .tapOnElement, .none:
@@ -202,9 +204,14 @@ public struct DefaultRowContent<Element>: View {
     }
     
     public var body: some View {
-        if selectionIndicator != nil && selectionIndicator != .tapOnElement && selectionIndicator != .tapOnRow {
-            Text("\(element)")
-                .foregroundColor(.primary)
+        if let indicator = selectionIndicator {
+            switch indicator {
+            case .tapOnElement, .tapOnRow:
+                Text("\(element)")
+            default:
+                Text("\(element)")
+                    .foregroundColor(.primary)
+            }
         } else {
             Text("\(element)")
         }

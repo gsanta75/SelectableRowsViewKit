@@ -57,7 +57,7 @@ struct ContentView: View {
                     viewModel: fruitsViewModelSelection,
                     elements: $fruits
                 )
-                .selectionWith(.checkbox)
+                .selectionWith(.checkbox())
                 .selectorColor(.yellow)
             } header: {
                 Text("Fruits (Checkbox Style)")
@@ -71,7 +71,7 @@ struct ContentView: View {
                     viewModel: numbersViewModelSelection,
                     elements: $numbers
                 )
-                .selectionWith(.toggle)
+                .selectionWith(.toggle())
                 .colorItemSelectionProvider { (item: Int) in
                     item % 2 == 0 ? .brown : .green
                 }

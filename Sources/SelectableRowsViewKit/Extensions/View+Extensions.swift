@@ -23,20 +23,34 @@ extension View {
 
 // MARK: - Selection Style Environment
 
+/// The alignment options for selection indicators.
+public enum SelectionIndicatorAlignment: Sendable {
+    case leading
+    case trailing
+}
+
 /// The visual style options for selection indicators.
-public enum SelectionIndicator: String, CaseIterable, Identifiable, Sendable {
+public enum SelectionIndicator: Identifiable, Sendable, Equatable {
     /// A checkmark icon that appears when selected.
-    case checkmark
+    case checkmark(alignment: SelectionIndicatorAlignment = .trailing)
     /// A checkbox that shows filled when selected, empty when not.
-    case checkbox
+    case checkbox(alignment: SelectionIndicatorAlignment = .trailing)
     /// A standard toggle switch.
-    case toggle
+    case toggle(alignment: SelectionIndicatorAlignment = .trailing)
     /// Tap gesture selection without visual indicator on the element content.
     case tapOnElement
     /// Tap gesture selection without visual indicator on the entire row.
     case tapOnRow
     
-    public var id: Self { self }
+    public var id: String {
+        switch self {
+        case .checkmark(let alignment): return "checkmark-\(alignment)"
+        case .checkbox(let alignment): return "checkbox-\(alignment)"
+        case .toggle(let alignment): return "toggle-\(alignment)"
+        case .tapOnElement: return "tapOnElement"
+        case .tapOnRow: return "tapOnRow"
+        }
+    }
     
     /// The human-readable title for the style.
     public var title: String {
@@ -47,6 +61,21 @@ public enum SelectionIndicator: String, CaseIterable, Identifiable, Sendable {
         case .tapOnElement: return "Tap on Element"
         case .tapOnRow: return "Tap on Row"
         }
+    }
+    
+    /// The alignment for the selection indicator.
+    public var alignment: SelectionIndicatorAlignment {
+        switch self {
+        case .checkmark(let alignment): return alignment
+        case .checkbox(let alignment): return alignment
+        case .toggle(let alignment): return alignment
+        case .tapOnElement, .tapOnRow: return .trailing // Not applicable but default value
+        }
+    }
+    
+    /// Returns all possible selection indicators with default alignment.
+    public static var allCases: [SelectionIndicator] {
+        return [.checkmark(), .checkbox(), .toggle(), .tapOnElement, .tapOnRow]
     }
 }
 
@@ -185,9 +214,3 @@ extension EnvironmentValues {
     }
 }
 
-extension SelectionIndicator {
-    public enum Alignment {
-        case leading
-        case trailing
-    }
-}

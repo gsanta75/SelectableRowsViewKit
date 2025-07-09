@@ -3,10 +3,10 @@ import SwiftUI
 // MARK: - Selection Icon ViewModifier
 public struct SelectionIconView<IconSelection: View>: ViewModifier {
     public let icon: IconSelection
-    public let alignment: SelectionIndicator.Alignment
+    public let alignment: SelectionIndicatorAlignment
     
     public init(icon: IconSelection,
-                alignment: SelectionIndicator.Alignment
+                alignment: SelectionIndicatorAlignment
     ) {
         self.icon = icon
         self.alignment = alignment
@@ -31,7 +31,7 @@ public struct SelectionIconView<IconSelection: View>: ViewModifier {
 extension View {
     public func withSelectionIconView<IconSelection: View>(
         _ icon: IconSelection,
-        alignment: SelectionIndicator.Alignment = .trailing
+        alignment: SelectionIndicatorAlignment = .trailing
     ) -> some View {
         modifier(SelectionIconView(icon: icon, alignment: alignment))
     }
@@ -48,7 +48,7 @@ public struct CheckboxSelection: ViewModifier {
     public let color: Color?
     
     /// The placement of the selection indicator on a row
-    public let alignment: SelectionIndicator.Alignment
+    public let alignment: SelectionIndicatorAlignment
 
     /// The action to perform when the selection state changes.
     public let onSelectionChange: () -> Void
@@ -62,7 +62,7 @@ public struct CheckboxSelection: ViewModifier {
     ///   - onSelectionChange: The action to perform when the selection state changes.
     public init(isSelected: Bool,
                 color: Color? = nil,
-                alignment: SelectionIndicator.Alignment = .trailing,
+                alignment: SelectionIndicatorAlignment = .trailing,
                 onSelectionChange: @escaping () -> Void
     ) {
         self.isSelected = isSelected
@@ -101,7 +101,7 @@ public struct CheckmarkSelection: ViewModifier {
     public let onSelectionChange: () -> Void
     
     /// The placement of the selection indicator on a row
-    public let alignment: SelectionIndicator.Alignment
+    public let alignment: SelectionIndicatorAlignment
     
     /// Creates a checkmark style selection modifier.
     ///
@@ -112,7 +112,7 @@ public struct CheckmarkSelection: ViewModifier {
     ///   - onSelectionChange: The action to perform when the selection state changes.
     public init(isSelected: Bool,
                 color: Color? = nil,
-                alignment: SelectionIndicator.Alignment = .trailing,
+                alignment: SelectionIndicatorAlignment = .trailing,
                 onSelectionChange: @escaping () -> Void
     ) {
         self.isSelected = isSelected
@@ -150,7 +150,7 @@ public struct ToggleSelection: ViewModifier {
     public let color: Color?
     
     /// The placement of the selection indicator on a row
-    public let alignment: SelectionIndicator.Alignment
+    public let alignment: SelectionIndicatorAlignment
 
     /// The action to perform when the selection state changes.
     public let onSelectionChange: () -> Void
@@ -164,7 +164,7 @@ public struct ToggleSelection: ViewModifier {
     ///   - onSelectionChange: The action to perform when the selection state changes.
     public init(isSelected: Bool,
                 color: Color? = nil,
-                alignment: SelectionIndicator.Alignment = .trailing,
+                alignment: SelectionIndicatorAlignment = .trailing,
                 onSelectionChange: @escaping () -> Void
     ) {
         self.isSelected = isSelected
@@ -184,7 +184,9 @@ public struct ToggleSelection: ViewModifier {
             get: { isSelected },
             set: { _ in onSelectionChange() }
         ))
-        .tint(color)
+        .labelsHidden()
+        .fixedSize()
+        .toggleStyle(SwitchToggleStyle(tint: color ?? .accentColor))
     }
 }
 
@@ -279,7 +281,7 @@ extension View {
     public func checkboxSelection(
         isSelected: Bool,
         color: Color? = nil,
-        alignment: SelectionIndicator.Alignment = .trailing,
+        alignment: SelectionIndicatorAlignment = .trailing,
         onSelectionChange: @escaping () -> Void
     ) -> some View {
         self.modifier(CheckboxSelection(
@@ -300,7 +302,7 @@ extension View {
     public func checkmarkSelection(
         isSelected: Bool,
         color: Color? = nil,
-        alignment: SelectionIndicator.Alignment = .trailing,
+        alignment: SelectionIndicatorAlignment = .trailing,
         onSelectionChange: @escaping () -> Void
     ) -> some View {
         self.modifier(CheckmarkSelection(
@@ -321,7 +323,7 @@ extension View {
     public func toggleSelection(
         isSelected: Bool,
         color: Color? = nil,
-        alignment: SelectionIndicator.Alignment = .trailing,
+        alignment: SelectionIndicatorAlignment = .trailing,
         onSelectionChange: @escaping () -> Void
     ) -> some View {
         self.modifier(ToggleSelection(
