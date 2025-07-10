@@ -1,18 +1,27 @@
 import SwiftUI
 
 // MARK: - Selection Icon ViewModifier
-public struct SelectionIconView<IconSelection: View>: ViewModifier {
-    public let icon: IconSelection
-    public let alignment: SelectionIndicatorAlignment
+
+/// A view modifier that positions a selection icon within a view based on alignment.
+/// Used internally by other selection modifiers to consistently place indicators.
+struct SelectionIconView<IconSelection: View>: ViewModifier {
+    /// The icon view to display.
+    let icon: IconSelection
+    /// The alignment of the icon within the view.
+    let alignment: SelectionIndicatorAlignment
     
-    public init(icon: IconSelection,
-                alignment: SelectionIndicatorAlignment
+    /// Creates a new selection icon view modifier.
+    /// - Parameters:
+    ///   - icon: The icon view to display.
+    ///   - alignment: The alignment of the icon within the view.
+    init(icon: IconSelection,
+         alignment: SelectionIndicatorAlignment
     ) {
         self.icon = icon
         self.alignment = alignment
     }
     
-    public func body(content: Content) -> some View {
+    func body(content: Content) -> some View {
         HStack {
             switch alignment {
             case .leading:
@@ -29,7 +38,7 @@ public struct SelectionIconView<IconSelection: View>: ViewModifier {
 }
 
 extension View {
-    public func withSelectionIconView<IconSelection: View>(
+    func withSelectionIconView<IconSelection: View>(
         _ icon: IconSelection,
         alignment: SelectionIndicatorAlignment = .trailing
     ) -> some View {
@@ -40,30 +49,27 @@ extension View {
 // MARK: - CheckboxSelection
 
 /// A view modifier that adds a checkbox selection indicator to a view.
-public struct CheckboxSelection: ViewModifier {
+/// Displays a filled or empty square icon that can be tapped to toggle selection.
+struct CheckboxSelection: ViewModifier {
     /// Whether the item is currently selected.
-    public let isSelected: Bool
-    
+    let isSelected: Bool
     /// The color to use for the selection indicator.
-    public let color: Color?
-    
-    /// The placement of the selection indicator on a row
-    public let alignment: SelectionIndicatorAlignment
-
+    let color: Color?
+    /// The placement of the selection indicator on a row.
+    let alignment: SelectionIndicatorAlignment
     /// The action to perform when the selection state changes.
-    public let onSelectionChange: () -> Void
+    let onSelectionChange: () -> Void
     
-    /// Creates a checkbox style selection modifier.
-    ///
+    /// Creates a checkbox selection modifier.
     /// - Parameters:
     ///   - isSelected: Whether the item is currently selected.
     ///   - color: The color to use for the selection indicator. Pass `nil` to use the default color.
-    ///   - alignment: The placement of the selection indicator on a row
+    ///   - alignment: The placement of the selection indicator on a row.
     ///   - onSelectionChange: The action to perform when the selection state changes.
-    public init(isSelected: Bool,
-                color: Color? = nil,
-                alignment: SelectionIndicatorAlignment = .trailing,
-                onSelectionChange: @escaping () -> Void
+    init(isSelected: Bool,
+         color: Color? = nil,
+         alignment: SelectionIndicatorAlignment = .trailing,
+         onSelectionChange: @escaping () -> Void
     ) {
         self.isSelected = isSelected
         self.color = color
@@ -71,7 +77,7 @@ public struct CheckboxSelection: ViewModifier {
         self.onSelectionChange = onSelectionChange
     }
     
-    public func body(content: Content) -> some View {
+    func body(content: Content) -> some View {
         content
             .withSelectionIconView(iconForSelection(isSelected), alignment: alignment)
     }
@@ -90,30 +96,27 @@ public struct CheckboxSelection: ViewModifier {
 // MARK: - CheckmarkSelection
 
 /// A view modifier that adds a checkmark selection indicator to a view.
-public struct CheckmarkSelection: ViewModifier {
+/// Displays a checkmark icon when selected, or an invisible placeholder when not selected.
+struct CheckmarkSelection: ViewModifier {
     /// Whether the item is currently selected.
-    public let isSelected: Bool
-    
+    let isSelected: Bool
     /// The color to use for the selection indicator.
-    public let color: Color?
-    
+    let color: Color?
     /// The action to perform when the selection state changes.
-    public let onSelectionChange: () -> Void
+    let onSelectionChange: () -> Void
+    /// The placement of the selection indicator on a row.
+    let alignment: SelectionIndicatorAlignment
     
-    /// The placement of the selection indicator on a row
-    public let alignment: SelectionIndicatorAlignment
-    
-    /// Creates a checkmark style selection modifier.
-    ///
+    /// Creates a checkmark selection modifier.
     /// - Parameters:
     ///   - isSelected: Whether the item is currently selected.
     ///   - color: The color to use for the selection indicator. Pass `nil` to use the default color.
-    ///   - alignment: The placement of the selection indicator on a row
+    ///   - alignment: The placement of the selection indicator on a row.
     ///   - onSelectionChange: The action to perform when the selection state changes.
-    public init(isSelected: Bool,
-                color: Color? = nil,
-                alignment: SelectionIndicatorAlignment = .trailing,
-                onSelectionChange: @escaping () -> Void
+    init(isSelected: Bool,
+         color: Color? = nil,
+         alignment: SelectionIndicatorAlignment = .trailing,
+         onSelectionChange: @escaping () -> Void
     ) {
         self.isSelected = isSelected
         self.color = color
@@ -121,7 +124,7 @@ public struct CheckmarkSelection: ViewModifier {
         self.onSelectionChange = onSelectionChange
     }
     
-    public func body(content: Content) -> some View {
+    func body(content: Content) -> some View {
         content
             .withSelectionIconView(iconForSelection(isSelected), alignment: alignment)
     }
@@ -141,31 +144,28 @@ public struct CheckmarkSelection: ViewModifier {
 
 // MARK: - ToggleSelection
 
-/// A view modifier that adds a toggle selection indicator to a view.
-public struct ToggleSelection: ViewModifier {
+/// A view modifier that adds a toggle switch selection indicator to a view.
+/// Displays a standard iOS toggle switch that reflects the selection state.
+struct ToggleSelection: ViewModifier {
     /// Whether the item is currently selected.
-    public let isSelected: Bool
-    
+    let isSelected: Bool
     /// The color to use for the selection indicator.
-    public let color: Color?
-    
-    /// The placement of the selection indicator on a row
-    public let alignment: SelectionIndicatorAlignment
-
+    let color: Color?
+    /// The placement of the selection indicator on a row.
+    let alignment: SelectionIndicatorAlignment
     /// The action to perform when the selection state changes.
-    public let onSelectionChange: () -> Void
+    let onSelectionChange: () -> Void
     
-    /// Creates a toggle style selection modifier.
-    ///
+    /// Creates a toggle selection modifier.
     /// - Parameters:
     ///   - isSelected: Whether the item is currently selected.
     ///   - color: The color to use for the selection indicator. Pass `nil` to use the default color.
-    ///   - alignment: The placement of the selection indicator on a row
+    ///   - alignment: The placement of the selection indicator on a row.
     ///   - onSelectionChange: The action to perform when the selection state changes.
-    public init(isSelected: Bool,
-                color: Color? = nil,
-                alignment: SelectionIndicatorAlignment = .trailing,
-                onSelectionChange: @escaping () -> Void
+    init(isSelected: Bool,
+         color: Color? = nil,
+         alignment: SelectionIndicatorAlignment = .trailing,
+         onSelectionChange: @escaping () -> Void
     ) {
         self.isSelected = isSelected
         self.color = color
@@ -173,7 +173,7 @@ public struct ToggleSelection: ViewModifier {
         self.onSelectionChange = onSelectionChange
     }
     
-    public func body(content: Content) -> some View {
+    func body(content: Content) -> some View {
         content
             .withSelectionIconView(iconForSelection(isSelected), alignment: alignment)
     }
@@ -192,33 +192,31 @@ public struct ToggleSelection: ViewModifier {
 
 // MARK: - TapElementSelection
 
-/// A view modifier that adds tap gesture selection without visual indicator on the element content.
-public struct TapElementSelection: ViewModifier {
+/// A view modifier that adds tap gesture selection to the element content without visual indicator.
+/// Changes the element's color when selected and responds to tap gestures.
+struct TapElementSelection: ViewModifier {
     /// Whether the item is currently selected.
-    public let isSelected: Bool
-    
-    /// The color to use for the element selected.
-    public let color: Color?
-    
+    let isSelected: Bool
+    /// The color to use for the element when selected.
+    let color: Color?
     /// The action to perform when the selection state changes.
-    public let onSelectionChange: () -> Void
+    let onSelectionChange: () -> Void
     
     /// Creates a tap element selection modifier.
-    ///
     /// - Parameters:
     ///   - isSelected: Whether the item is currently selected.
     ///   - color: The color to use for the element when selected. Pass `nil` to use the default color.
     ///   - onSelectionChange: The action to perform when the selection state changes.
-    public init(isSelected: Bool,
-                color: Color? = nil,
-                onSelectionChange: @escaping () -> Void
+    init(isSelected: Bool,
+         color: Color? = nil,
+         onSelectionChange: @escaping () -> Void
     ) {
         self.isSelected = isSelected
         self.color = color
         self.onSelectionChange = onSelectionChange
     }
     
-    public func body(content: Content) -> some View {
+    func body(content: Content) -> some View {
         content
             .foregroundColor(isSelected ? color ?? .blue : .primary)
             .onTapGesture {
@@ -229,33 +227,31 @@ public struct TapElementSelection: ViewModifier {
 
 // MARK: - TapRowSelection
 
-/// A view modifier that adds tap gesture selection without visual indicator on the entire row.
-public struct TapRowSelection: ViewModifier {
+/// A view modifier that adds tap gesture selection to the entire row without visual indicator.
+/// Changes the element's color when selected and responds to tap gestures on the entire row area.
+struct TapRowSelection: ViewModifier {
     /// Whether the item is currently selected.
-    public let isSelected: Bool
-    
-    /// The color to use for the element selected.
-    public let color: Color?
-    
+    let isSelected: Bool
+    /// The color to use for the element when selected.
+    let color: Color?
     /// The action to perform when the selection state changes.
-    public let onSelectionChange: () -> Void
+    let onSelectionChange: () -> Void
     
     /// Creates a tap row selection modifier.
-    ///
     /// - Parameters:
     ///   - isSelected: Whether the item is currently selected.
     ///   - color: The color to use for the element when selected. Pass `nil` to use the default color.
     ///   - onSelectionChange: The action to perform when the selection state changes.
-    public init(isSelected: Bool,
-                color: Color? = nil,
-                onSelectionChange: @escaping () -> Void
+    init(isSelected: Bool,
+         color: Color? = nil,
+         onSelectionChange: @escaping () -> Void
     ) {
         self.isSelected = isSelected
         self.color = color
         self.onSelectionChange = onSelectionChange
     }
     
-    public func body(content: Content) -> some View {
+    func body(content: Content) -> some View {
         HStack {
             content
                 .foregroundColor(isSelected ? color ?? .blue : .primary)
@@ -272,9 +268,20 @@ public struct TapRowSelection: ViewModifier {
 
 extension View {
     
+    /// Applies a selection indicator to the view based on the specified selection type.
+    ///
+    /// This method serves as a unified entry point for applying different selection indicators
+    /// to views, automatically handling the appropriate modifier based on the selection type.
+    ///
+    /// - Parameters:
+    ///   - selectionIndicator: The type of selection indicator to apply.
+    ///   - isSelected: Whether the item is currently selected.
+    ///   - color: The color to use for the selection indicator. Pass `nil` to use the default color.
+    ///   - onSelectionChange: The action to perform when the selection state changes.
+    /// - Returns: A view with the appropriate selection indicator applied.
     @ViewBuilder
-    public func rowItemForSelection(
-        selectionIndicator: SelectionIndicator,
+    internal func withSelectionIndicator(
+        _ selectionIndicator: SelectionIndicator,
         isSelected: Bool,
         color: Color? = nil,
         onSelectionChange: @escaping () -> Void

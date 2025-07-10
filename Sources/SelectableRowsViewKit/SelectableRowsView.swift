@@ -89,8 +89,8 @@ public struct SelectionRowsView<Element: Hashable, RowContent: View>: View {
             let selectionAction = { viewModel.updateSelection(element) }
             
             rowContentProvider(element, isSelected)
-                .rowItemForSelection(
-                    selectionIndicator: selectionIndicator ?? SelectionIndicator.tapOnElement,
+                .withSelectionIndicator(
+                    selectionIndicator ?? SelectionIndicator.tapOnElement,
                     isSelected: isSelected,
                     color: indicatorColor,
                     onSelectionChange: selectionAction
