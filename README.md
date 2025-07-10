@@ -30,7 +30,7 @@ Add the following to your `Package.swift` file:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/gsanta75/SelectableRowsViewKit.git", from: "1.3.0")
+    .package(url: "https://github.com/gsanta75/SelectableRowsViewKit.git", from: "1.3.1")
 ]
 ```
 
@@ -388,6 +388,12 @@ This project is available under the MIT License. See the LICENSE file for more i
 Giuseppe Santaniello - [@gsanta75](https://github.com/gsanta75)
 
 ## Changelog
+
+### 1.3.1
+- **INTERNAL**: Cleaned up public API exposure
+- **INTERNAL**: Made ViewModifiers internal implementation details
+- **INTERNAL**: Improved code maintainability and documentation
+- **INTERNAL**: Unified selection logic with single entry point
 
 ### 1.3.0
 - **NEW**: Added alignment support for selection indicators
